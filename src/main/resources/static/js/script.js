@@ -29,9 +29,6 @@ jQuery(function ($) {
                             .delay(2000)
                             .fadeOut(1000, function () {
                                 $("#registrationForm").trigger("reset");
-                                // $(this).tabs({ active: -1 });
-                                // $('#usersTableLink').click();
-                                // $("#userstable").show();
                             });
                     });
                     addTableRow(data);
@@ -148,26 +145,6 @@ function addTableRow(element) {
                   </tr>`;
     $('#tbody').append(markup);
 }
-
-// function toContainModalWindow(buttonElement){
-//     var id = buttonElement.id.slice(buttonElement.id.lastIndexOf('-') + 1);
-//     $('#id-input').attr('value', id);
-//     $('#id-input-hidden').attr('value', id);
-//     $('#username-edit').attr('value', $('#username-' + id).text());
-//     $('#password-edit').attr('value', "");
-//     $('#age-edit').attr('value', $('#userAge-' + id).text());
-//     var userRow = $("[id=" + id + "]");
-//     var rolesList = ["admin", "user"];
-//     var userRoles = userRow.find('#userRoles-' + id).text();
-//     $('#role-edit').empty();
-//     rolesList.forEach(function (value) {
-//         if (userRoles.includes(value)) {
-//             $('#role-edit').append('<option id="option"' + value + ' value="' + value + '" selected>' + value + '</option>')
-//         } else {
-//             $('#role-edit').append('<option id="option"' + value + ' value="' + value + '">' + value + '</option>')
-//         }
-//     });
-// }
 
 function createTable() {
 
