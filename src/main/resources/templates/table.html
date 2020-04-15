@@ -5,6 +5,8 @@
     <title>User table</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="/static/js/script.js"></script>
     <link rel="stylesheet" th:href="@{/styles.css}" type="text/css"/>
 </head>
 <body>
@@ -61,173 +63,122 @@
                                             <th> Edit</th>
                                             <th> Delete</th>
                                         </tr>
-                                        <th:block th:each="user:${userList}">
-                                            <tr>
-                                                <td th:text="${user.getId()}">User id</td>
-                                                <td th:text="${user.getName()}">User name</td>
-                                                <td th:text="${user.getPassword()}">User password</td>
-                                                <td th:text="${user.getAge()}">User age</td>
-                                                <td th:text="${user.getStringRole()}">User role</td>
-                                                <td>
-                                                    <!-- Button trigger modal -->
-                                                    <button type="button" class="btn btn-info" data-toggle="modal"
-                                                            th:data-target="${'#UserIDEdit' + user.id}">
-                                                        Edit
-                                                    </button>
-                                                </td>
-                                                <td>
-                                                    <button type="button" class="btn btn-danger" data-toggle="modal"
-                                                            th:data-target="${'#UserIDDelete' + user.id}">
-                                                        Delete
-                                                    </button>
-                                                </td>
-                                                <!-- Модальное окно Начало-->
-
-                                                <!-- The Modal -->
-                                                <div class="modal" th:id="${'UserIDEdit' + user.id}">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            ​
-                                                            <!-- Modal Header -->
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title"
-                                                                    th:text="${'Edit user ' + user.name}"></h5>
-                                                                <button type="button" class="close"
-                                                                        data-dismiss="modal">&times;
-                                                                </button>
-                                                            </div>
-                                                            ​
-                                                            <!-- Modal body -->
-                                                            <div class="modal-body">
-                                                                <form method="POST" action="/admin/editUser"
-                                                                      th:id="${'editForm' + user.id}">
-                                                                    <div class="form-group">
-                                                                        <label for="idInput">ID</label>
-                                                                        <input type="text" class="form-control"
-                                                                               id="idInput"
-                                                                               th:value="${user.id}" disabled>
-                                                                        <input type="hidden" name="id"
-                                                                               th:value="${user.id}"
-                                                                               th:valuetype="Long">
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label for="usernameEdit">Username</label>
-                                                                        <input type="text" class="form-control"
-                                                                               id="usernameEdit"
-                                                                               name="name" th:value="${user.name}">
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label for="passwordEdit">Password</label>
-                                                                        <input type="password" class="form-control"
-                                                                               id="passwordEdit" name="password"
-                                                                               placeholder="Enter password">
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label for="emailEdit">Age</label>
-                                                                        <input type="number" class="form-control"
-                                                                               id="emailEdit"
-                                                                               name="age" th:value="${user.age}">
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label for="roleEdit">Role</label>
-                                                                        <select class="form-control" id="roleEdit"
-                                                                                multiple
-                                                                                name="roles">
-                                                                            <option value="user" selected>USER</option>
-                                                                            <option value="admin">ADMIN</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                            ​
-                                                            <!-- Modal footer -->
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                        data-dismiss="modal">Close
-                                                                </button>
-                                                                <button type="submit" class="btn btn-primary"
-                                                                        th:form="${'editForm' + user.id}">Edit user
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!--                                                Modal Edit End-->
-                                                <!--                                                Modal Delete Begin-->
-                                                <div class="modal" th:id="${'UserIDDelete' + user.id}">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            ​
-                                                            <!-- Modal Header -->
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title"
-                                                                    th:text="${'Delete user ' + user.name}"></h5>
-                                                                <button type="button" class="close"
-                                                                        data-dismiss="modal">&times;
-                                                                </button>
-                                                            </div>
-                                                            ​
-                                                            <!-- Modal body -->
-                                                            <div class="modal-body">
-                                                                <form method="POST" action="/admin/delete"
-                                                                      th:id="${user.id}">
-                                                                    <div class="form-group">
-                                                                        <label for="idInput">ID</label>
-                                                                        <input type="text" class="form-control"
-                                                                               id="idDelete"
-                                                                               th:value="${user.id}" disabled>
-                                                                        <input type="hidden" name="id"
-                                                                               th:value="${user.id}"
-                                                                               th:valuetype="Long">
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label for="usernameEdit">Username</label>
-                                                                        <input type="text" class="form-control"
-                                                                               id="usernameDelete"
-                                                                               name="username" th:value="${user.name}"
-                                                                               disabled>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label for="passwordEdit">Password</label>
-                                                                        <input type="password" class="form-control"
-                                                                               id="passwordDelete" name="password"
-                                                                               placeholder="Enter password" disabled>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label for="ageDelete">Age</label>
-                                                                        <input type="number" class="form-control"
-                                                                               id="ageDelete"
-                                                                               name="age" th:value="${user.age}"
-                                                                               disabled>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label for="roleEdit">Role</label>
-                                                                        <select class="form-control" id="roleDelete"
-                                                                                multiple
-                                                                                name="userRoles" disabled>
-                                                                            <option value="USER">USER</option>
-                                                                            <option value="ADMIN">ADMIN</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-
-                                                            <!-- Modal footer -->
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                        data-dismiss="modal">Close
-                                                                </button>
-                                                                <button type="submit" class="btn btn-danger"
-                                                                        th:form="${user.id}">Delete user
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!--  Modal Delete End    -->
-                                            </tr>
-                                        </th:block>
+                                        <tbody id="tbody"></tbody>
                                     </table>
+                                    <!--                                    Модальное окно Начало-->
+                                    <!-- The Modal -->
+                                    <div class="modal" id="modal-edit">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                ​
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title"></h5>
+                                                    <button type="button" class="close" data-dismiss="modal">
+                                                    </button>
+                                                </div>
+
+                                                <!-- Modal body -->
+                                                <div class="modal-body">
+                                                    <form method="POST" id="editForm">
+                                                        <div class="form-group">
+                                                            <label for="id-input">ID</label>
+                                                            <input type="text" class="form-control"
+                                                                   id="id-input" disabled>
+                                                            <input type="hidden" name="id" id="id-input-hidden">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="username-edit">Username</label>
+                                                            <input type="text" class="form-control"
+                                                                   id="username-edit" name="name">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="password-edit">Password</label>
+                                                            <input type="password" class="form-control"
+                                                                   id="password-edit" name="password"
+                                                                   placeholder="Enter password">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="age-edit">Age</label>
+                                                            <input type="number" class="form-control"
+                                                                   id="age-edit" name="age">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="role-edit">Role</label>
+                                                            <select class="form-control" id="role-edit"
+                                                                    multiple
+                                                                    name="roles">
+                                                            </select>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <!-- Modal footer -->
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary close-btn"
+                                                            data-dismiss="modal">Close
+                                                    </button>
+                                                    <button type="submit" class="btn btn-primary" id="update-user">Edit user</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--  Modal Edit End -->
+<!--                                        Modal Delete start-->
+                                    <div class="modal" id="modal-delete">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                ​
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title"></h5>
+                                                    <button type="button" class="close" data-dismiss="modal">
+                                                    </button>
+                                                </div>
+
+                                                <!-- Modal body -->
+                                                <div class="modal-body">
+                                                    <form method="POST" id="delete-form">
+                                                        <div class="form-group">
+                                                            <label for="id-input-delete">ID</label>
+                                                            <input type="text" class="form-control"
+                                                                   id="id-input-delete" disabled>
+                                                            <input type="hidden" name="id" id="id-input-hidden-delete">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="username-edit-delete">Username</label>
+                                                            <input type="text" class="form-control"
+                                                                   id="username-edit-delete" name="name" disabled>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="password-edit-delete">Password</label>
+                                                            <input type="password" class="form-control"
+                                                                   id="password-edit-delete" name="password"
+                                                                   placeholder="Enter password" disabled>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="age-edit-delete">Age</label>
+                                                            <input type="number" class="form-control"
+                                                                   id="age-edit-delete" name="age" disabled>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="role-edit-delete">Role</label>
+                                                            <select class="form-control" id="role-edit-delete"
+                                                                    multiple name="roles" disabled>
+                                                            </select>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <!-- Modal footer -->
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" id="close-delete-btn"
+                                                            data-dismiss="modal">Close
+                                                    </button>
+                                                    <button type="submit" class="btn btn-danger" id="delete-user">Delete user</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+<!--                                            Model Delete End-->
                                 </div>
                             </div>
                         </div>
@@ -238,46 +189,38 @@
                                 <div class="container-fluid border bg-white" id="container-new-user">
                                     <div class="container col-sm-4">
                                         <!--  Форма нового юзера начало-->
-                                        <form class="form-group-input" action="/admin/userAdd" method="post">
+                                        <div id="ajaxRegistrationDiv"></div>
+                                        <form class="form-group-input" id="registrationForm">
                                             <div class="form-group">
-                                                <b class="d-flex justify-content-center">Name:</b>
-                                                <input type="text" name="name" class="form-control" placeholder="Login">
+                                                <b for="usernameInput" class="d-flex justify-content-center">Name:</b>
+                                                <input type="text" name="name" class="form-control"
+                                                       placeholder="Login" id="usernameInput">
                                             </div>
                                             <div class="form-group">
-                                                <b class="d-flex justify-content-center">Age:</b>
-                                                <input type="number" name="age" class="form-control" placeholder="Age">
+                                                <b for="ageInput" class="d-flex justify-content-center">Age:</b>
+                                                <input type="number" name="age" class="form-control"
+                                                       placeholder="Age" id="ageInput">
                                             </div>
                                             <div class="form-group">
-                                                <b class="d-flex justify-content-center">Password:</b>
+                                                <b for="passwordInput"
+                                                   class="d-flex justify-content-center">Password:</b>
                                                 <input type="password" name="password" class="form-control"
-                                                       placeholder="Password">
+                                                       placeholder="Password" id="passwordInput">
                                             </div>
-                                            <div class="row px-5">
-
-                                                <div class="col-sm">
-                                                    <div class="form-group form-check-inline">
-                                                        <label class="form-check-label" for="adm">
-                                                            <b>Role:</b>
-                                                        </label>
-                                                        <input class="form-check-input" type="checkbox" name="roles"
-                                                               value="admin" id="adm">
-                                                        <label class="form-check-label" for="adm">
-                                                            Admin
-                                                        </label>
-
-                                                        <input class="form-check-input" type="checkbox" name="roles"
-                                                               value="user" id="us">
-                                                        <label class="form-check-label" for="us">
-                                                            User
-                                                        </label>
-                                                    </div>
+                                                <div class="form-group">
+                                                    <b for="rolesInput"
+                                                       class="d-flex justify-content-center">Role</b>
+                                                    <select class="form-control d-flex justify-content-center"
+                                                            id="rolesInput" multiple name="roles">
+                                                        <option value="ADMIN" selected>ADMIN</option>
+                                                        <option value="USER" selected>USER</option>
+                                                    </select>
                                                 </div>
-
-                                            </div>
                                             <div class="d-flex justify-content-center">
-                                                <button type="submit" class="btn btn-success">Add new user</button>
+                                                <button type="submit" class="btn btn-success" id="registrationButton">
+                                                    Add new user
+                                                </button>
                                             </div>
-
                                         </form>
                                         <!-- Форма нового юзера конец-->
                                     </div>
@@ -322,8 +265,9 @@
     </div>
     <!-- Конец Навигацонный блок для переключения режима просмотра страницы админа и юзера-->
 </div>
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+<script
+        src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
         crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"

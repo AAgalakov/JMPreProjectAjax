@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface UserService extends UserDetailsService {
 
-    List<User> allUsers();
+    List<UserDto> allUsers();
 
     boolean addUser(UserDto userDto);
 

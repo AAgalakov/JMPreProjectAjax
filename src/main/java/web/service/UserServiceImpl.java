@@ -29,8 +29,8 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public List<User> allUsers() {
-        return userRepo.findAll();
+    public List<UserDto> allUsers() {
+        return userRepo.findAll().stream().map(UserDto::new).collect(Collectors.toList());
     }
 
     @Override
@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Long id) {
-        return userRepo.findById(id);
+        return userRepo.findById(id).orElseThrow(() -> new IllegalStateException("User not find by Id"));
     }
 
     @Override

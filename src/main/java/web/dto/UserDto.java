@@ -66,8 +66,11 @@ public class UserDto {
 
     public String getStringRole() {
         StringBuilder stringBuilder = new StringBuilder();
-        for (String role : roles) {
-            stringBuilder.append(role).append(" ");
+        for (int i = 0; i < roles.length; i++) {
+            stringBuilder.append(roles[i]);
+            if (roles.length > 1 && i < roles.length - 1){
+                stringBuilder.append(" ");
+            }
         }
         return stringBuilder.toString();
     }

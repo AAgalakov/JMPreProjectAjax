@@ -23,12 +23,8 @@ public class AdminController {
 
     @GetMapping
     public String getAllUsers(Authentication authentication, Model model) {
-        List<UserDto> userDtoList = new ArrayList<>();
-        for (User user : userService.allUsers()) {
-            userDtoList.add(new UserDto(user));
-        }
         model.addAttribute("user", new UserDto(userService.getUserByName(authentication.getName())));
-        model.addAttribute("userList", userDtoList);
+        model.addAttribute("userList", userService.allUsers());
         return "table";
     }
 
