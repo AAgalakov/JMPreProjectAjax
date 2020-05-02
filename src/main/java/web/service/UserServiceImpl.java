@@ -1,11 +1,13 @@
 package web.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import web.dto.UserDto;
+import web.model.Role;
 import web.model.User;
 import web.repository.UserRepo;
 
@@ -15,26 +17,27 @@ import java.util.stream.Collectors;
 
 @Transactional
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements ServiceAbstr<UserDto>, UserDetailsService {
 
     private final UserRepo userRepo;
 
-    private final RoleService roleService;
+    private final ServiceAbstr<Role> serviceAbstr;
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepo userRepo, RoleService roleService, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepo userRepo, ServiceAbstr<Role> serviceAbstr, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
-        this.roleService = roleService;
+        this.serviceAbstr = serviceAbstr;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public List<UserDto> allUsers() {
+    @Override
+    public List<UserDto> allEntity() {
         return userRepo.findAll().stream().map(UserDto::new).collect(Collectors.toList());
     }
 
     @Override
-    public boolean addUser(UserDto userDto) {
+    public boolean addEntity(UserDto userDto) {
         if (!isNameUnique(userDto)) {
             return false;
         }
@@ -44,11 +47,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean updateUser(UserDto userDto) {
-        if (getUserById(userDto.getId()).getName().equals(userDto.getName()) || isNameUnique(userDto)) {
+    public boolean updateEntity(UserDto userDto) {
+        if (getEntityById(userDto.getId()).getName().equals(userDto.getName()) || isNameUnique(userDto)) {
             User user = fromForm(userDto);
             if (user.getPassword().isEmpty()) {
-                user.setPassword(getUserById(user.getId()).getPassword());
+                user.setPassword(getEntityById(user.getId()).getPassword());
             }
             userRepo.save(user);
             return true;
@@ -57,28 +60,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void deleteEntity(Long id) {
         userRepo.deleteById(id);
     }
 
     @Override
-    public User getUserById(Long id) {
-        return userRepo.findById(id).orElseThrow(() -> new IllegalStateException("User not find by Id"));
+    public UserDto getEntityById(Long id) {
+        return new UserDto(userRepo.findById(id).orElseThrow(() -> new IllegalStateException("User not find by Id")));
     }
 
     @Override
-    public User getUserByName(String name) throws IllegalStateException {
-        return userRepo.findByName(name).orElseThrow(() -> new IllegalStateException("User not find by name"));
+    public UserDto getEntityByName(String name) throws IllegalStateException {
+        return new UserDto(userRepo.findByName(name).orElseThrow(() -> new IllegalStateException("User not find by name")));
     }
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        return getUserByName(s);
+        return userRepo.findByName(s).orElseThrow(() -> new IllegalStateException("User not find by name"));
     }
 
     private void setRoles(User user, UserDto userDto) {
         user.setRoles(Arrays.stream(userDto.getRoles())
-                .map(roleService::getRoleByName)
+                .map(serviceAbstr::getEntityByName)
                 .collect(Collectors.toSet()));
     }
 

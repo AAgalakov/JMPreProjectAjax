@@ -5,44 +5,40 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import web.dto.UserDto;
-import web.model.User;
-import web.service.UserService;
-
-import java.util.ArrayList;
-import java.util.List;
+import web.service.ServiceAbstr;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 
-    private UserService userService;
+    private final ServiceAbstr<UserDto> serviceAbstr;
 
-    public AdminController(UserService userService) {
-        this.userService = userService;
+    public AdminController(ServiceAbstr<UserDto> serviceAbstr) {
+        this.serviceAbstr = serviceAbstr;
     }
 
     @GetMapping
     public String getAllUsers(Authentication authentication, Model model) {
-        model.addAttribute("user", new UserDto(userService.getUserByName(authentication.getName())));
-        model.addAttribute("userList", userService.allUsers());
+        model.addAttribute("user", serviceAbstr.getEntityByName(authentication.getName()));
+        model.addAttribute("userList", serviceAbstr.allEntity());
         return "table";
     }
 
     @PostMapping("/userAdd")
     public String addUser(UserDto userDto) {
-        userService.addUser(userDto);
+        serviceAbstr.addEntity(userDto);
         return "redirect:/admin";
     }
 
     @PostMapping("/delete")
     public String deleteUser(@RequestParam("id") long id) {
-        userService.deleteUser(id);
+        serviceAbstr.deleteEntity(id);
         return "redirect:/admin";
     }
 
     @PostMapping("/editUser")
     public String editUser(@ModelAttribute("user") UserDto userDto) {
-        userService.updateUser(userDto);
+        serviceAbstr.updateEntity(userDto);
         return "redirect:/admin";
     }
 }

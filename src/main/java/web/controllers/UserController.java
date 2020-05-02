@@ -6,21 +6,21 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import web.dto.UserDto;
-import web.service.UserService;
+import web.service.ServiceAbstr;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
 
-    private UserService userService;
+    private final ServiceAbstr<UserDto> serviceAbstr;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController(ServiceAbstr<UserDto> serviceAbstr) {
+        this.serviceAbstr = serviceAbstr;
     }
 
     @GetMapping
     public String getUserPage(Authentication authentication, Model model) {
-        model.addAttribute("user", new UserDto(userService.getUserByName(authentication.getName())));
+        model.addAttribute("user", serviceAbstr.getEntityByName(authentication.getName()));
         return "userPage";
     }
 }

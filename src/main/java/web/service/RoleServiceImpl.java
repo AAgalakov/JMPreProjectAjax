@@ -9,7 +9,7 @@ import java.util.List;
 
 @Transactional
 @Service
-public class RoleServiceImpl implements RoleService {
+public class RoleServiceImpl implements ServiceAbstr<Role> {
 
     private final RoleRepo roleRepo;
 
@@ -18,35 +18,37 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<Role> allRoles() {
+    public List<Role> allEntity() {
         return roleRepo.findAll();
     }
 
     @Override
-    public void addRole(Role role) {
+    public boolean addEntity(Role role) {
         roleRepo.save(role);
+        return true;
     }
 
     @Override
-    public void updateRole(Role role) {
-        if (getRoleById(role.getId()).getNameRole().equals(role.getNameRole()) || isRoleNameUnique(role)) {
+    public boolean updateEntity(Role role) {
+        if (getEntityById(role.getId()).getNameRole().equals(role.getNameRole()) || isRoleNameUnique(role)) {
             roleRepo.save(role);
         }
+        return true;
     }
 
     @Override
-    public void deleteRole(Long id) {
+    public void deleteEntity(Long id) {
         roleRepo.delete(roleRepo.findById(id));
     }
 
     @Override
-    public Role getRoleById(Long id) {
+    public Role getEntityById(Long id) {
         return roleRepo.findById(id);
     }
 
     @Override
-    public Role getRoleByName(String role) throws IllegalStateException {
-        return roleRepo.findByNameRole(role).orElseThrow(() -> new IllegalStateException("User not find by name"));
+    public Role getEntityByName(String name) {
+        return roleRepo.findByNameRole(name).orElseThrow(() -> new IllegalStateException("User not find by name"));
     }
 
     private boolean isRoleNameUnique(Role role) {
