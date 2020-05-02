@@ -7,7 +7,7 @@ import java.util.List;
 
 @Transactional
 @Service
-public interface ServiceAbstr<T> {
+public interface ServiceAbstractInterface<T> {
 
     List<T> allEntity();
 

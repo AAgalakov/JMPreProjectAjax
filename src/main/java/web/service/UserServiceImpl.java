@@ -17,17 +17,17 @@ import java.util.stream.Collectors;
 
 @Transactional
 @Service
-public class UserServiceImpl implements ServiceAbstr<UserDto>, UserDetailsService {
+public class UserServiceImpl implements ServiceAbstractInterface<UserDto>, UserDetailsService {
 
     private final UserRepo userRepo;
 
-    private final ServiceAbstr<Role> serviceAbstr;
+    private final ServiceAbstractInterface<Role> serviceAbstractInterface;
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepo userRepo, ServiceAbstr<Role> serviceAbstr, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepo userRepo, ServiceAbstractInterface<Role> serviceAbstractInterface, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
-        this.serviceAbstr = serviceAbstr;
+        this.serviceAbstractInterface = serviceAbstractInterface;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -81,7 +81,7 @@ public class UserServiceImpl implements ServiceAbstr<UserDto>, UserDetailsServic
 
     private void setRoles(User user, UserDto userDto) {
         user.setRoles(Arrays.stream(userDto.getRoles())
-                .map(serviceAbstr::getEntityByName)
+                .map(serviceAbstractInterface::getEntityByName)
                 .collect(Collectors.toSet()));
     }
 

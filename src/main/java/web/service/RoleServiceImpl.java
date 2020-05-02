@@ -9,7 +9,7 @@ import java.util.List;
 
 @Transactional
 @Service
-public class RoleServiceImpl implements ServiceAbstr<Role> {
+public class RoleServiceImpl implements ServiceAbstractInterface<Role> {
 
     private final RoleRepo roleRepo;
 
