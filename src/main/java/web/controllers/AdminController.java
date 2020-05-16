@@ -19,6 +19,7 @@ public class AdminController {
 
     @GetMapping
     public String getAllUsers(Authentication authentication, Model model) {
+
         model.addAttribute("user", serviceAbstractInterface.getEntityByName(authentication.getName()));
         model.addAttribute("userList", serviceAbstractInterface.allEntity());
         return "table";
